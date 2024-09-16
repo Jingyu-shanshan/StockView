@@ -1,5 +1,7 @@
 using StockView.Components;
 using StockView.Models;
+using StockView.Services;
+using StockView.Services.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,9 @@ builder.Services.AddRazorComponents()
 // register FinnHub
 builder.Services.AddOptions();
 builder.Services.Configure<FinnHub>(builder.Configuration.GetSection("FinnHub"));
+
+// register FinnHubService
+builder.Services.AddScoped<IFinnHubService, FinnHubService>();
 
 var app = builder.Build();
 
