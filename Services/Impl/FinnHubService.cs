@@ -16,9 +16,9 @@ public class FinnHubService : IFinnHubService
         _httpClient = httpClient;
     }
 
-    public async Task<StockSymbol?[]> GetStockSymbolsAsync()
+    public async Task<StockSymbol[]?> GetStockSymbolsAsync()
     {
-        var stockSymbols = Array.Empty<StockSymbol>();
+        StockSymbol[]? stockSymbols;
         
         try
         {
@@ -33,7 +33,7 @@ public class FinnHubService : IFinnHubService
             }
             else
             {
-                Console.WriteLine($"Error: {response.StatusCode}");
+                return null;
             }
         }
         catch (Exception e)
