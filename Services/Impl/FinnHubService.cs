@@ -23,7 +23,7 @@ public class FinnHubService : IFinnHubService
         try
         {
             var response = await _httpClient.GetAsync(
-                BaseUrl + "?token=" + _apiKey + "&exchange=US");
+                BaseUrl + "?token=" + _apiKey + "&exchange=US&mic=XNYS");
         
             if (response.IsSuccessStatusCode)
             {

@@ -1,13 +1,13 @@
 @page "/stockSymbol"
-@using StockView.Services
-@inject IFinnHubService FinnHubService
+@rendermode InteractiveServer
+@inject Services.IFinnHubService FinnHubService
 <h3>StockSymbol</h3>
 
-@if (_stockSymbols == null)
+@if (_stockSymbols == null || _paginatedStockSymbols == null)
 {
     <p>Loading...</p>
 }
-else if (!_stockSymbols.Any())
+else if (!_stockSymbols.Any() || !_paginatedStockSymbols.Any())
 {
     <p>No stock available.</p>
 }
@@ -29,7 +29,7 @@ else
         </tr>
         </thead>
         <tbody>
-        @foreach (var stockSymbol in _stockSymbols)
+        @foreach (var stockSymbol in _paginatedStockSymbols)
         {
             <tr>
                 <td>@(stockSymbol.Currency ?? "NULL")</td>
@@ -46,14 +46,67 @@ else
         }
         </tbody>
     </table>
+    
+    <nav>
+        <ul class="pagination">
+            <!-- Previous Button -->
+            <li class="page-item @(HasPreviousPage ? "" : "disabled")">
+                <button class="page-link" @onclick="GoToPreviousPage">Previous</button>
+            </li>
+
+            <!-- Next Button -->
+            <li class="page-item @(HasNextPage ? "" : "disabled")">
+                <button class="page-link" @onclick="GoToNextPage">Next</button>
+            </li>
+        </ul>
+    </nav>
 }
 
 @code {
     private Models.StockSymbol[]? _stockSymbols;
+    private Models.StockSymbol[]? _paginatedStockSymbols;
+    
+    private const int PageSize = 5;
+    private int _currentPage;
+    private int _totalPages;
+    private bool HasPreviousPage => _currentPage > 1;
+    private bool HasNextPage => _currentPage < _totalPages;
 
     protected override async Task OnInitializedAsync()
     {
         _stockSymbols = await FinnHubService.GetStockSymbolsAsync();
+        _totalPages = (int)Math.Ceiling(_stockSymbols?.Length ?? 0 / (double)PageSize);
+        if (_currentPage < 1)
+        {
+            _currentPage = 1;
+        }
+        else if (_currentPage > _totalPages)
+        {
+            _currentPage = _totalPages;
+        }
+        UpdatePaginatedStockSymbols();
+    }
+    
+    private void UpdatePaginatedStockSymbols()
+    {
+        _paginatedStockSymbols = _stockSymbols?
+            .Skip((_currentPage - 1) * PageSize)
+            .Take(PageSize)
+            .ToArray();
+    }
+    
+    private void GoToPreviousPage()
+    {
+        if (!HasPreviousPage) return;
+        _currentPage--;
+        UpdatePaginatedStockSymbols();
+    }
+
+    private void GoToNextPage()
+    {
+        if (!HasNextPage) return;
+        _currentPage++;
+        UpdatePaginatedStockSymbols();
     }
 
 }
