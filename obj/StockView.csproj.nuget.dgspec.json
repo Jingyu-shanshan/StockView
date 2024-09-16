@@ -43,9 +43,25 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.11.1, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.72, )"
+            },
             "MudBlazor": {
               "target": "Package",
               "version": "[7.8.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "xUnit": {
+              "target": "Package",
+              "version": "[2.9.0, )"
             }
           },
           "imports": [

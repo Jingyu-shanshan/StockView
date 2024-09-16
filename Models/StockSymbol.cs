@@ -1,15 +1,27 @@
+using System.Text.Json.Serialization;
+
 namespace StockView.Models;
 
 public class StockSymbol
 {
-    public required string Currency { get; set; }
-    public required string Description { get; set; }
-    public required string DisplaySymbol { get; set; }
-    public required string Figi { get; set; }
-    public required string Isin { get; set; }
-    public required string Mic { get; set; }
-    public required string ShareClassFIGI { get; set; }
-    public required string Symbol { get; set; }
-    public required string Symbol2 { get; set; }
-    public required string Type { get; set; }
+    [JsonPropertyName("currency")]
+    public string? Currency { get; set; }
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+    [JsonPropertyName("displaySymbol")]
+    public string? DisplaySymbol { get; set; }
+    [JsonPropertyName("figi")]
+    public string? Figi { get; set; }
+    [JsonPropertyName("isin")]
+    public string? Isin { get; set; }
+    [JsonPropertyName("mic")]
+    public string? Mic { get; set; }
+    [JsonPropertyName("shareClassFIGI")]
+    public string? ShareClassFIGI { get; set; }
+    [JsonPropertyName("symbol")]
+    public string? Symbol { get; set; }
+    [JsonPropertyName("symbol2")]
+    public string? Symbol2 { get; set; }
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
 }

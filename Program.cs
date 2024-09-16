@@ -1,10 +1,14 @@
 using StockView.Components;
+using StockView.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// register FinnHub
+builder.Services.AddOptions();
+builder.Services.Configure<FinnHub>(builder.Configuration.GetSection("FinnHub"));
 
 var app = builder.Build();
 
