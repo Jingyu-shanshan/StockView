@@ -1,11 +1,59 @@
-@page "/StockSymbol"
+@page "/stockSymbol"
+@using StockView.Services
+@inject IFinnHubService FinnHubService
 <h3>StockSymbol</h3>
 
+@if (_stockSymbols == null)
+{
+    <p>Loading...</p>
+}
+else if (!_stockSymbols.Any())
+{
+    <p>No stock available.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Currency</th>
+            <th>Description</th>
+            <th>DisplaySymbol</th>
+            <th>Figi</th>
+            <th>Isin</th>
+            <th>Mic</th>
+            <th>ShareClassFIGI</th>
+            <th>Symbol</th>
+            <th>Symbol2</th>
+            <th>Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var stockSymbol in _stockSymbols)
+        {
+            <tr>
+                <td>@(stockSymbol.Currency ?? "NULL")</td>
+                <td>@(stockSymbol.Description ?? "NULL")</td>
+                <td>@(stockSymbol.DisplaySymbol ?? "NULL")</td>
+                <td>@(stockSymbol.Figi ?? "NULL")</td>
+                <td>@(stockSymbol.Isin ?? "NULL")</td>
+                <td>@(stockSymbol.Mic ?? "NULL")</td>
+                <td>@(stockSymbol.ShareClassFIGI ?? "NULL")</td>
+                <td>@(stockSymbol.Symbol ?? "NULL")</td>
+                <td>@(stockSymbol.Symbol2 ?? "NULL")</td>
+                <td>@(stockSymbol.Type ?? "NULL")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
 @code {
-    private StockSymbol[]? _stockSymbols;
+    private Models.StockSymbol[]? _stockSymbols;
 
     protected override async Task OnInitializedAsync()
     {
-        
+        _stockSymbols = await FinnHubService.GetStockSymbolsAsync();
     }
+
 }

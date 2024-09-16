@@ -12,6 +12,9 @@ builder.Services.AddRazorComponents()
 builder.Services.AddOptions();
 builder.Services.Configure<FinnHub>(builder.Configuration.GetSection("FinnHub"));
 
+// Register HttpClient
+builder.Services.AddHttpClient();
+
 // register FinnHubService
 builder.Services.AddScoped<IFinnHubService, FinnHubService>();
 
