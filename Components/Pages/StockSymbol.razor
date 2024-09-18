@@ -1,11 +1,39 @@
 @page "/stockSymbol"
+@using StockView.Models
 @rendermode InteractiveServer
 @inject Services.IFinnHubService FinnHubService
 <h3>StockSymbol</h3>
 
+<EditForm Model="@_finnHubParam" OnValidSubmit="Search">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div>
+        <label for="searchExchange">Search by Exchange:</label>
+        <InputText id="searchExchange" @bind-Value="_finnHubParam!.Exchange" class="form-control" />
+        <ValidationMessage For="@(() => _finnHubParam.Exchange)" />
+    </div>
+
+    <div>
+        <label for="searchMic">Search by Mic:</label>
+        <InputText id="searchMic" @bind-Value="_finnHubParam.Mic" class="form-control" />
+    </div>
+    
+    <div>
+        <label for="searchSecurityType">Search by SecurityType:</label>
+        <InputText id="searchSecurityType" @bind-Value="_finnHubParam.SecurityType" class="form-control" />
+    </div>
+    
+    <div>
+        <label for="searchCurrency">Search by Currency:</label>
+        <InputText id="searchCurrency" @bind-Value="_finnHubParam.Currency" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</EditForm>
+
 @if (_stockSymbols == null || _paginatedStockSymbols == null)
 {
-    <p>Loading...</p>
+    <p>Waiting...</p>
 }
 else if (!_stockSymbols.Any() || !_paginatedStockSymbols.Any())
 {
@@ -65,6 +93,13 @@ else
 @code {
     private Models.StockSymbol[]? _stockSymbols;
     private Models.StockSymbol[]? _paginatedStockSymbols;
+
+    private readonly FinnHubParam? _finnHubParam = new()
+    {
+        Exchange = "US"
+    };
+
+    private bool _isSearchPerformed;
     
     private const int PageSize = 5;
     private int _currentPage;
@@ -72,9 +107,11 @@ else
     private bool HasPreviousPage => _currentPage > 1;
     private bool HasNextPage => _currentPage < _totalPages;
 
-    protected override async Task OnInitializedAsync()
+    private async Task Search()
     {
-        _stockSymbols = await FinnHubService.GetStockSymbolsAsync();
+        _isSearchPerformed = true;
+
+        if (_finnHubParam != null) _stockSymbols = await FinnHubService.GetStockSymbolsAsync(_finnHubParam);
         _totalPages = (int)Math.Ceiling(_stockSymbols?.Length ?? 0 / (double)PageSize);
         if (_currentPage < 1)
         {

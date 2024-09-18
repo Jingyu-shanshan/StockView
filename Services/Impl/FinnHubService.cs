@@ -16,14 +16,18 @@ public class FinnHubService : IFinnHubService
         _httpClient = httpClient;
     }
 
-    public async Task<StockSymbol[]?> GetStockSymbolsAsync()
+    public async Task<StockSymbol[]?> GetStockSymbolsAsync(FinnHubParam finnHubParam)
     {
         StockSymbol[]? stockSymbols;
         
         try
         {
             var response = await _httpClient.GetAsync(
-                BaseUrl + "?token=" + _apiKey + "&exchange=US&mic=XNYS");
+                BaseUrl + "?token=" + _apiKey 
+                + "&exchange=" + finnHubParam.Exchange
+                + "&mic=" + finnHubParam.Mic
+                + "&securityType" + finnHubParam.SecurityType
+                + "&currency" + finnHubParam.Currency);
         
             if (response.IsSuccessStatusCode)
             {

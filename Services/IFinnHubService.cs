@@ -4,5 +4,5 @@ namespace StockView.Services;
 
 public interface IFinnHubService
 {
-    public Task<StockSymbol[]?> GetStockSymbolsAsync();
+    public Task<StockSymbol[]?> GetStockSymbolsAsync(FinnHubParam finnHubParam);
 }

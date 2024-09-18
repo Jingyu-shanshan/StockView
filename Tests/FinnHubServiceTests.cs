@@ -14,7 +14,14 @@ public class FinnHubServiceTests
     public async Task GetStockSymbolAsync_ShouldReturnValidSymbolArray_WhenFinnHubApiCallSuccessful()
     {
         const string filePath = "Tests/TestData/FinnHubApiResponseData.json";
-        
+
+        var finnHubParam = new FinnHubParam
+        {
+            Exchange = "USD",
+            Mic = "XNYS"
+        };
+
+
         var jsonContent = await File.ReadAllTextAsync(filePath);
         
         var appSettings = new FinnHub
@@ -42,7 +49,7 @@ public class FinnHubServiceTests
         
         var finnHubService = new FinnHubService(mockOptions.Object, httpClient);
         
-        var stockSymbols = await finnHubService.GetStockSymbolsAsync();
+        var stockSymbols = await finnHubService.GetStockSymbolsAsync(finnHubParam);
         
         Assert.NotNull(stockSymbols);
         Assert.Equal(3, stockSymbols.Length);
@@ -57,6 +64,12 @@ public class FinnHubServiceTests
         var appSettings = new FinnHub
         {
             ApiKey = "TestApiKey"
+        };
+        
+        var finnHubParam = new FinnHubParam
+        {
+            Exchange = "USD",
+            Mic = "XNYS"
         };
         
         var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
@@ -79,7 +92,7 @@ public class FinnHubServiceTests
         
         var finnHubService = new FinnHubService(mockOptions.Object, httpClient);
         
-        var stockSymbols = await finnHubService.GetStockSymbolsAsync();
+        var stockSymbols = await finnHubService.GetStockSymbolsAsync(finnHubParam);
         
         Assert.Null(stockSymbols);
     }
